@@ -70,8 +70,8 @@ def show_entries():
 
 from route.admin import admin
 app.register_blueprint(admin, url_prefix='/admin')
-from route.main import main
-app.register_blueprint(main,url_prefix='/index')
+# from route.main import main
+# app.register_blueprint(main,url_prefix='/index')
 
 if __name__ == '__main__':
     app.run()

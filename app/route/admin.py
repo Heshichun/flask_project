@@ -1,10 +1,14 @@
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash,Blueprint
 from forms import LoginForm
-from . import admin, main
+from . import admin
 
-# @admin.route('/')
-# def main():
-#     return '<h1>Hello World!</h1>'
+@admin.route('/')
+def index():
+    return '<h1>Hello World!</h1>'
+
+@admin.route('/1')
+def index2():
+    return redirect(url_for('.index'))
 
 @admin.route('/login', methods = ['GET', 'POST'])
 def login():
@@ -17,14 +21,14 @@ def login():
         else:
             session['logged_in'] = True
             flash('logged in')
-            return redirect(url_for('main.index'))
+            return redirect(url_for('.index'))
     return render_template('login.html', error=error)
 
 @admin.route('/logout')
 def logout():
     session.pop('logged_in', None)
     flash('You were logged out')
-    return redirect(url_for('main.index'))
+    return redirect(url_for('admin.index'))
 
 @admin.route('/add', methods = ['POST'])
 def add_entry():
@@ -34,4 +38,4 @@ def add_entry():
 
     g.db.commit()
     flash('New entry was successfully posted')
-    return redirect(url_for('main.index'))
+    return redirect(url_for('admin.index'))
