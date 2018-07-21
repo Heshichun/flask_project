@@ -20,10 +20,6 @@ def create_app(test_config=None):
     except OSError:
         pass
     
-    @app.route('/')
-    def hello():
-        return 'Hello World'
-    
     from . import db #防止循环调用
     db.init_app(app)#在工厂中导入并调用这个函数。
 

@@ -19,7 +19,7 @@ def index():
     ).fetchall()
     return render_template('blog/index.html', posts = posts)
 
-@bp.route('/create', methods = ('POST', 'GET'))
+@bp.route('/create', methods = ('GET', 'POST'))
 @login_required
 def create():
     if request.method == 'POST':
@@ -40,7 +40,7 @@ def create():
                 (title, body, g.user['id'])
             )
             db.commit()
-            return render_template(url_for('blog.index'))
+            return redirect(url_for('blog.index'))
     return render_template('blog/create.html')
 
 def get_post(id, check_author=True):#check_author 参数的作用是函数可以用于在不检查作者的情况下获取一个 post 。
@@ -57,6 +57,8 @@ def get_post(id, check_author=True):#check_author 参数的作用是函数可以
     
     if check_author and post['author_id'] != g.user['id']:
         abort(403)
+    
+    return post
     
 @bp.route('/<int:id>/update', methods = ('GET', 'POST'))
 @login_required
@@ -84,7 +86,7 @@ def update(id):
             db.commit()
             return redirect(url_for('blog.index'))
 
-    return render_template('blog/update.html', post=post)
+    return render_template('blog/update.html', post = post)
 
 @bp.route('/<int:id>/delete',methods=('POST',))
 @login_required
@@ -96,3 +98,8 @@ def delete(id):
     )
     db.commit()
     return redirect(url_for('blog.index'))
+
+@bp.route('/<int:id>')
+def view_post(id):
+    post = get_post(id)
+    return render_template('blog/post.html', post=post)
