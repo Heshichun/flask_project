@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{{ post['title'] }}</h1>
+  <!-- <h1>{{ post['title'] }}</h1> -->
 {% endblock %}
 
 {% block content %}
   <article class="post">
     <header>
       <div>
-        <h1><a class="action" href="{{ url_for('blog.view_post', id=post['id']) }}">{{ post['title'] }}</a></h1> 
+        <h1>{{ post['title'] }}</h1> 
         <div class="about">by {{ post['username'] }} on {{ post['created'].strftime('%Y-%m-%d') }}</div>
       </div>
       {% if g.user['id'] == post['author_id'] %}
@@ -17,4 +17,30 @@
     </header>
     <p class="body">{{ post['body'] }}</p>
   </article>
+  <br>
+  <div>
+    {% for comment in comments %}
+      <article class="comments">
+        <header>
+          <div>
+            <h1>{{ comment['body'] }}</h1> 
+            <div class="about">by {{ comment['author_id'] }} on {{ comment['created'].strftime('%Y-%m-%d') }}</div>
+          </div>
+          <!-- {% if g.user['id'] == post['author_id'] %}
+            <a class="action" href="{{ url_for('blog.update', id=post['id']) }}">Edit</a>
+          {% endif %} -->
+          <!-- index 也文章标题后添加编辑选项 -->
+        </header>
+      </article>
+    {% endfor %}
+  </div>
+  <div>
+    <form method="post">
+      <!-- <label for="title">Comments</label>
+      <input name="comments_title" id="comments_title" value="{{ request.form['comments_title'] }}" required> -->
+      <label for="body">评论</label>
+      <textarea name="comments_body" id="comments_body">{{ request.form['comments_body'] }}</textarea>
+      <input type="submit" value="提交"">
+    </form>
+  </div>
 {% endblock %}
