@@ -20,7 +20,7 @@
         {% endif %} -->
         <!-- index 也文章标题后添加编辑选项 -->
       </header>
-      <p class="body">{{ post['body']|truncate(50) }}</p>
+      <p class="body">{{ post['body']|markdown|safe|truncate(50) }}</p>
     </article>
     {% if not loop.last %}
       <hr>

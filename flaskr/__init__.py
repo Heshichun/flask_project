@@ -1,9 +1,11 @@
 import os
 from flask import Flask
+from flaskext.markdown import Markdown
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     # 看一下instance_relative_config 的解释：默认为False，如果设置为True的话，他会将配置文件路径设置为实例文件的路径，而不是应用程序根目录
+    Markdown(app)
     app.config.from_mapping(
         SECRET_KEY = 'DEV',
         DATABASE = os.path.join(app.instance_path, 'flaskr.sqlite')

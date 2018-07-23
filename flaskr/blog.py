@@ -41,7 +41,31 @@ def create():
             )
             db.commit()
             return redirect(url_for('blog.index'))
-    return render_template('blog/create.html')
+
+    mkd = '''
+    # header
+    ## header2
+    [picture](http://www.example.com)
+    * 1
+    * 2
+    * 3
+    **bold**
+    '''
+    return render_template('blog/create.html', mkd=mkd)
+
+@bp.route('/test')
+def test_1():
+    mkd = '''
+    # header
+    ## header2
+    [picture](http://www.example.com)
+    * 1
+    * 2
+    * 3
+    **bold**
+    '''
+
+    return render_template('blog/test.html', mkd=mkd)
 
 def get_post(id, check_author=True):#check_author 参数的作用是函数可以用于在不检查作者的情况下获取一个 post 。
                                     #这主要用于显示一个独立的帖子页面的情况，因为这时用户是谁没有关系， 用户不会修改帖子。
