@@ -21,6 +21,7 @@
     <body>
       <div id="test-editormd">
         <textarea name="body" id="body" style="display:none;"></textarea>
+        <!-- 这里有些东西需要注意，这涉及到端点如何从模板里取得内容。或者说，模板里的内容是如何被赋值打包进 requests 的 -->
       </div>
       <script src="{{ url_for('static',filename='editormd/examples/js/jquery.min.js') }}"></script>
       <script src="{{ url_for('static',filename='editormd/editormd.min.js') }}"></script>

@@ -5,7 +5,41 @@
 {% endblock %}
 
 {% block content %}
+
   <form method="post">
+    <label for="title">Title</label>
+    <input name="title" id="title" value="{{ request.form['title'] }}" required>
+    <!-- <label for="body">Body</label>
+    <textarea name="body" id="body">{{ request.form['body'] }}</textarea> -->
+
+    <head>
+    <meta charset="utf-8"/>
+    <title>New Post</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='editormd/css/editormd.css') }}"/>
+    </head>
+    <body>
+      <div id="test-editormd">
+        <textarea name="body" id="body" style="display:none;">{{ request.form['body'] or post['body'] }}</textarea>
+        <!-- 这里有些东西需要注意，这涉及到端点如何从模板里取得内容。或者说，模板里的内容是如何被赋值打包进 requests 的 -->
+      </div>
+      <script src="{{ url_for('static',filename='editormd/examples/js/jquery.min.js') }}"></script>
+      <script src="{{ url_for('static',filename='editormd/editormd.min.js') }}"></script>
+      <script type="text/javascript">
+          var testEditor;
+
+          $(function () {
+              testEditor = editormd("test-editormd", {
+                  width: "90%",
+                  height: 640,
+                  syncScrolling: "single",
+                  path: "{{ url_for('static',filename='editormd/lib/') }}"
+              });
+          });
+      </script>
+    </body>
+    <input type="submit" value="Save">
+  </form>
+  <!-- <form method="post">
     <label for="title">Title</label>
     <input name="title" id="title"
       value="{{ request.form['title'] or post['title'] }}" required>
@@ -16,5 +50,5 @@
   <hr>
   <form action="{{ url_for('blog.delete', id = post['id']) }}" method="post">
     <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
-  </form>
+  </form> -->
 {% endblock %}
