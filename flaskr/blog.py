@@ -13,7 +13,7 @@ bp = Blueprint('blog', __name__)
 def index():
     db = get_db()
     posts = db.execute(
-        'SELECT p.id, title, body, created, author_id, username'
+        'SELECT p.id, title, body, created, author_id, username, tag'
         ' FROM post p JOIN user u ON p.author_id = u.id'
         ' ORDER BY created DESC'
     ).fetchall()
@@ -71,7 +71,7 @@ def get_post(id, check_author=True):#check_author 参数的作用是函数可以
                                     #这主要用于显示一个独立的帖子页面的情况，因为这时用户是谁没有关系， 用户不会修改帖子。
                                     #这里可能有问题，怀疑会出现其他登录用户无法查看内容这样的情况。
     post = get_db().execute(
-        'SELECT p.id, title, body, created, author_id, username'
+        'SELECT p.id, title, body, created, author_id, username, tag'
         ' FROM post p JOIN user u ON p.author_id = u.id'# http://www.runoob.com/sqlite/sqlite-joins.html
         ' WHERE p.id = ?',
         (id,)
@@ -80,8 +80,8 @@ def get_post(id, check_author=True):#check_author 参数的作用是函数可以
     if post is None:
         abort(404, "Post id {0} doesn't exist.".format(id))
     
-    if check_author and post['author_id'] != g.user['id']:
-        abort(403)
+    # if check_author and post['author_id'] != g.user['id']:
+    #     abort(403)
     
     return post
 
@@ -162,7 +162,7 @@ def delete(id):
 
 @bp.route('/<int:id>', methods=('GET','POST'))
 def view_post(id):
-
+    #评论编辑被我写进这里了，所以才有 post
     if request.method == 'POST':
         # if not title:
         #   error = 'Title is required.' 以后再添加
@@ -180,3 +180,19 @@ def view_post(id):
         post = get_post(id)
         comments = get_comments(id)
         return render_template('blog/post.html', post=post, comments=comments)
+
+# @bp.route('/<tag:str>')
+def get_tags(tag):
+    db = get_db()
+    posts = db.execute(
+        'SELECT p.id, title, body, created, author_id, username, tag'
+        'FROM post'
+        'WHERE tag = ?',
+        (tag,)
+    ).fetchall()
+    return posts
+
+@bp.route('/<tag:str>')
+def view_tags(tag):
+    posts = get_tags(tgag)
+    return render_template('blog/tags.html', tag=tag, posts = posts)
